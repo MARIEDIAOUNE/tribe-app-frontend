@@ -14,51 +14,42 @@ import { AttributesModelService } from "./_services/attributes.model.service";
 })
 export class AttributesPage implements OnInit {
 
+    result: any;
+
   constructor(private _userService: UserService,
     private _alertService: AlertService,
     private _loadingService: LoadingService,
     private _attributesModelService: AttributesModelService,
     private router: Router) { }
+    private _attributesModelService: AttributesModelService) { }
 
   ngOnInit() {
-
+      const self = this;
+      self._attributesModelService.getAttributesByUser().then(
+          (response: any) => {
+              self.result = response;
+              console.log(self.result);
+              console.log('Processing pre() API Request');
+          }
+      );
   }
 
-  getAttributes() {
-    // await this._attributesModelService.getAttributesByUser();
-
-    return [
-        {
-            "phrase": {
-                "adverb": "competitively",
-                "verb": "writes",
-                "preposition": null,
-                "noun": "code"
-            }
-        },
-        {
-            "phrase": {
-                "adverb": null,
-                "verb": "plays",
-                "preposition": null,
-                "noun": "chess"
-            }
-        }
-    ];
+  getAttributes(){
+      return this.result;
   }
 
   getAttrString(attr) {
     let rtn = "";
 
-    if (attr.phrase.adverb)
-      rtn += attr.phrase.adverb + " ";
+    if (attr['phrase']['adverb'])
+      rtn += attr['phrase']['adverb'] + " ";
 
-    rtn += attr.phrase.verb + " ";
+    rtn += attr['phrase']['verb'] + " ";
 
-    if (attr.phrase.preposition)
-      rtn += attr.phrase.preposition + " ";
+    if (attr['phrase']['preposition'])
+      rtn += attr['phrase']['preposition'] + " ";
 
-    rtn += attr.phrase.noun;
+    rtn += attr['phrase']['noun'];
 
     return rtn;
   }
